@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
-  m_Name: Rock
+  m_Name: Oak_Log
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Rock
-  icon: {fileID: 2029542551908640097, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
+  itemName: Birch Log
+  icon: {fileID: -4261047623482395726, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 1
-  maxStackSize: 10
-  description: Just simple rock hmm i think i can do something use him..
-  dropPrefab: {fileID: 892132527098491025, guid: 47106e453d2308349b75b38c08c3cee2, type: 3}
+  maxStackSize: 5
+  price: 10
+  description: 
+  dropPrefab: {fileID: 0}

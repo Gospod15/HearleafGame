@@ -7,57 +7,112 @@ public class InventoryManager : MonoBehaviour
     public Transform slotsParent;
     public InventorySlot[] slots;
 
-    // Список нам тут вже менше потрібен, будемо працювати прямо зі слотами
-    // Але для зручності можна залишити, проте логіку краще будувати на перевірці слотів.
-
-    public ItemData testItem;
-
-    void Awake() { instance = this; }
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
+        // Знаходимо всі слоти в дочірніх об'єктах
         slots = slotsParent.GetComponentsInChildren<InventorySlot>();
     }
 
-    public bool Add(ItemData item)
+    // --- 1. ДОДАВАННЯ ПРЕДМЕТА ---
+    // Я перейменував метод з Add на AddItem, щоб він збігався з ShopManager
+    public bool AddItem(ItemData item, int amount)
     {
-        // 1. Сценарій: Предмет стакається (яблука, стріли)
+        // Сценарій 1: Предмет стакається
         if (item.isStackable)
         {
-            // Шукаємо слот, де ВЖЕ є цей предмет і де є місце (< maxStackSize)
             foreach (InventorySlot slot in slots)
             {
                 if (slot.item == item && slot.amount < item.maxStackSize)
                 {
-                    slot.amount++; // Збільшуємо кількість
-                    slot.AddItem(item, slot.amount); // Оновлюємо вигляд
-                    return true;
+                    int spaceInSlot = item.maxStackSize - slot.amount;
+                    int amountToAdd = Mathf.Min(spaceInSlot, amount);
+
+                    slot.amount += amountToAdd;
+                    slot.AddItem(item, slot.amount); // Оновлюємо візуал
+                    
+                    amount -= amountToAdd;
+                    if (amount <= 0) return true;
                 }
             }
         }
 
-        // 2. Сценарій: Предмет новий або не стакається, або стак повний
-        // Шукаємо перший порожній слот
-        foreach (InventorySlot slot in slots)
+        // Сценарій 2: Шукаємо порожній слот
+        if (amount > 0)
         {
-            if (slot.item == null) // Якщо слот пустий
+            foreach (InventorySlot slot in slots)
             {
-                slot.AddItem(item, 1); // Додаємо 1 штуку
-                return true;
+                if (slot.item == null)
+                {
+                    int amountToAdd = Mathf.Min(item.maxStackSize, amount);
+                    slot.AddItem(item, amountToAdd);
+                    
+                    amount -= amountToAdd;
+                    if (amount <= 0) return true;
+                }
             }
         }
 
-        Debug.Log("Інвентар повний!");
-        return false;
+        if (amount > 0)
+        {
+            Debug.Log("Інвентар повний!");
+            return false;
+        }
+        
+        return true;
     }
 
-    void Update()
+    // --- 2. ПЕРЕВІРКА КІЛЬКОСТІ (ГРОШЕЙ) ---
+    // Цього методу у тебе не було!
+    public int GetItemAmount(ItemData itemToCheck)
     {
-        if (UnityEngine.InputSystem.Keyboard.current.kKey.wasPressedThisFrame) 
+        int total = 0;
+        foreach (InventorySlot slot in slots)
         {
-            Add(testItem);
+            if (slot.item != null && slot.item == itemToCheck)
+            {
+                total += slot.amount;
+            }
+        }
+        // Debug.Log($"Перевіряємо {itemToCheck.itemName}: знайдено {total}");
+        return total;
+    }
+
+    // --- 3. ВИДАЛЕННЯ ПРЕДМЕТА (ОПЛАТА) ---
+    // Цього методу теж не було!
+    public void RemoveItem(ItemData itemToRemove, int amountToRemove)
+    {
+        foreach (InventorySlot slot in slots)
+        {
+            if (slot.item == itemToRemove)
+            {
+                if (slot.amount >= amountToRemove)
+                {
+                    slot.amount -= amountToRemove;
+                    amountToRemove = 0;
+                }
+                else
+                {
+                    amountToRemove -= slot.amount;
+                    slot.amount = 0;
+                }
+
+                // Оновлюємо вигляд слота
+                if (slot.amount <= 0)
+                {
+                    slot.ClearSlot();
+                }
+                else
+                {
+                    slot.AddItem(slot.item, slot.amount);
+                }
+
+                if (amountToRemove <= 0) return;
+            }
         }
     }
-
 }
-

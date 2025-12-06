@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
-  m_Name: Oak_Log
+  m_Name: Copper_Ore
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Birch Log
-  icon: {fileID: -4261047623482395726, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
+  itemName: Copper Ore
+  icon: {fileID: 1346724022, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 1
-  maxStackSize: 5
+  maxStackSize: 15
+  price: 200
   description: 
+  dropPrefab: {fileID: 0}

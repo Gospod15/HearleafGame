@@ -7,6 +7,7 @@ public class ItemData : ScriptableObject
     public Sprite icon;
     public bool isStackable;
     public int maxStackSize = 30;
+    public int price;
     
     [TextArea] public string description;
 

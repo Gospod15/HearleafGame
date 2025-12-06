@@ -6,6 +6,10 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Rigidbody2D))] // Гарантирует, что Rigidbody2D есть на объекте
 public class PlayerController : MonoBehaviour
 {
+    [Header("Взаємодія")]
+    public float interactionRadius = 2.0f; // Радіус, в якому можна підняти предмет
+    public LayerMask interactionLayer;     // Шар предметів (щоб не плутати з ворогами)
+
     [Header("Настройки Выносливости")]
     public float maxStamina = 100f;
     public float currentStamina;
@@ -136,18 +140,39 @@ public class PlayerController : MonoBehaviour
 
     void TryInteract()
     {
-        bool mined = false;
+        Collider2D hitCollider = Physics2D.OverlapCircle(transform.position, interactionRadius, interactionLayer);
 
+        if (hitCollider != null)
+        {
+            // Перевіряємо, чи є на об'єкті наш скрипт
+            ItemInWorldManager itemInWorld = hitCollider.GetComponent<ItemInWorldManager>();
+            
+            if (itemInWorld != null)
+            {
+                itemInWorld.Pickup();
+                return; // Якщо підібрали, виходимо (щоб одночасно не копати землю)
+            }
+        }
+
+        // 2. Якщо предметів немає, пробуємо копати землю (твоя старая логіка)
+        bool mined = false;
         if (WorldGenerator.instance != null)
         {
             mined = WorldGenerator.instance.TryMineStone(transform.position);
             if (mined)
             {
-                Debug.Log("Rock + 1");
-                return; // Если выкопали, выходим, чтобы не спамить логами
+                Debug.Log("Rock + 1 (Mining)");
+                return;
             }
         }
 
-        Debug.Log("Нечего подбирать / Невдалося забрати камінь");
+        Debug.Log("Нічого немає поруч");
+    }
+
+    // (Опціонально) Щоб бачити радіус у редакторі Unity
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, interactionRadius);
     }
 }

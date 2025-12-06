@@ -264,7 +264,7 @@ public class WorldGenerator : MonoBehaviour
                     }
 
                     // 1. Додаємо камінь в інвентар
-                    bool added = InventoryManager.instance.Add(stoneItem);
+                    bool added = InventoryManager.instance.AddItem(stoneItem,1);
                     
                     if (added)
                     {

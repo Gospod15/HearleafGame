@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
-  m_Name: Birch_Log
+  m_Name: Rock
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Birch Log
-  icon: {fileID: -488721925442295091, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
+  itemName: Rock
+  icon: {fileID: 2029542551908640097, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 1
-  maxStackSize: 5
+  maxStackSize: 10
   description: 
+  dropPrefab: {fileID: 7880113943053705827, guid: ff7d472e7837ef9489b4da616ddee6ef, type: 3}

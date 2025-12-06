@@ -1,9 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.EventSystems; // 1. ВАЖНО: Добавь эту библиотеку
+using UnityEngine.EventSystems; 
 
-// 2. Добавь интерфейс IPointerClickHandler
 public class InventorySlot : MonoBehaviour, IPointerClickHandler
 {
     public Image iconComponent;
@@ -11,6 +10,9 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     
     public ItemData item;
     public int amount;
+    
+    // Флаг: чи це слот магазину?
+    public bool isShopSlot = false; 
 
     public void AddItem(ItemData newItem, int count)
     {
@@ -19,7 +21,9 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         iconComponent.sprite = item.icon;
         iconComponent.enabled = true;
 
-        if (item.isStackable && amount > 1)
+        // В магазині показуємо кількість завжди (щоб бачити залишок товару)
+        // В інвентарі - тільки якщо стакається
+        if (isShopSlot || (item.isStackable && amount > 1))
         {
             amountText.text = amount.ToString();
             amountText.enabled = true;
@@ -39,19 +43,30 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         if (amountText != null) amountText.enabled = false;
     }
 
-    // 3. Реализуем метод клика
     public void OnPointerClick(PointerEventData eventData)
     {
-        // Если слот пустой - ничего не делаем
-        if (item == null) return;
-
-        // Если нажата ПРАВАЯ кнопка мыши (Right Button)
-        if (eventData.button == PointerEventData.InputButton.Right)
+        if (eventData.button == PointerEventData.InputButton.Left)
         {
-            // Открываем наше меню
+            // === ЛОГІКА МАГАЗИНУ ===
+            if (isShopSlot)
+            {
+                if (ShopManager.instance != null && item != null)
+                {
+                    // 1. Показуємо ціну
+                    ShopManager.instance.SelectShopItem(item);
+                    // 2. Пробуємо купити 1 штуку
+                    ShopManager.instance.TryBuyItem(this);
+                }
+                return; // Виходимо, щоб не відкрити меню викидання
+            }
+
+            // === ЛОГІКА ІНВЕНТАРЮ (твоя стара) ===
             if (ContextMenuController.instance != null)
             {
-                ContextMenuController.instance.OpenMenu(item, this);
+                if (item != null)
+                    ContextMenuController.instance.OpenMenu(item, this);
+                else
+                    ContextMenuController.instance.ClearSelection();
             }
         }
     }
