@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 6b17ad67071060e45ba5f9a3cff13477
+guid: bc0fea5b87391854dba640043c89eb9a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8078966772632430244
-    second: Buildings_0
+      213: 6840857970483876212
+    second: shop_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -72,7 +72,7 @@ TextureImporter:
   platformSettings:
   - serializedVersion: 4
     buildTarget: DefaultTexturePlatform
-    maxTextureSize: 2048
+    maxTextureSize: 1024
     resizeAlgorithm: 1
     textureFormat: -1
     textureCompression: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Buildings_0
+      name: shop_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 32
-        height: 32
+        width: 283
+        height: 117
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: c595f05468eb1ef80800000000000000
-      internalID: -8078966772632430244
+      spriteID: 4715799641c9fee50800000000000000
+      internalID: 6840857970483876212
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Buildings_0: -8078966772632430244
+      shop_0: 6840857970483876212
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
