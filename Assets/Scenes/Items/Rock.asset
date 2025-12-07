@@ -12,9 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
   m_Name: Rock
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Rock
+  itemName: "\u041A\u0430\u043C\u0456\u043D\u044C"
   icon: {fileID: 2029542551908640097, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 1
+<<<<<<< Updated upstream:Assets/Scenes/Items/Rock.asset
   maxStackSize: 10
   description: Just simple rock hmm i think i can do something use him..
   dropPrefab: {fileID: 892132527098491025, guid: 47106e453d2308349b75b38c08c3cee2, type: 3}
+=======
+  maxStackSize: 30
+  price: 0
+  itemType: 0
+  FeedAmount: 0
+  isEatable: 0
+  toolType: 0
+  tileToPlace: {fileID: 0}
+  tileToRemove: {fileID: 0}
+  dropPrefab: {fileID: 7880113943053705827, guid: ff7d472e7837ef9489b4da616ddee6ef, type: 3}
+>>>>>>> Stashed changes:Assets/Scenes/Items/Scriptable/Rock.asset

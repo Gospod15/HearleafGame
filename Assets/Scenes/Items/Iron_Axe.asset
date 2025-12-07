@@ -12,8 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
   m_Name: Iron_Axe
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Iron Axe
+  itemName: "\u0417\u0430\u043B\u0456\u0437\u043D\u0430 \u0441\u043E\u043A\u0438\u0440\u0430"
   icon: {fileID: -133002755, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 0
   maxStackSize: 1
+<<<<<<< Updated upstream:Assets/Scenes/Items/Iron_Axe.asset
   description: 
+=======
+  price: 100
+  itemType: 0
+  FeedAmount: 0
+  isEatable: 0
+  toolType: 0
+  tileToPlace: {fileID: 0}
+  tileToRemove: {fileID: 0}
+  dropPrefab: {fileID: 0}
+>>>>>>> Stashed changes:Assets/Scenes/Items/Scriptable/Iron_Axe.asset

@@ -51,7 +51,19 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
             // Открываем наше меню
             if (ContextMenuController.instance != null)
             {
+<<<<<<< Updated upstream
                 ContextMenuController.instance.OpenMenu(item, this);
+=======
+                player.Eat(item.FeedAmount);
+                
+                amount--;
+                if (amount <= 0) {
+                    ClearSlot();
+                    if (ContextMenuController.instance != null) ContextMenuController.instance.ClearSelection();
+                } else {
+                    AddItem(item, amount);
+                }
+>>>>>>> Stashed changes
             }
         }
     }

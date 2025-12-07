@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
   m_Name: Birch_Log
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Birch Log
+  itemName: "\u0411\u0435\u0440\u0435\u0437\u043E\u0432\u0430 \u043A\u043E\u043B\u043E\u0434\u0430"
   icon: {fileID: -488721925442295091, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 1
+<<<<<<< Updated upstream:Assets/Scenes/Items/Birch_Log.asset
   maxStackSize: 5
   description: 
+=======
+  maxStackSize: 30
+  price: 25
+  itemType: 0
+  FeedAmount: 0
+  isEatable: 0
+  toolType: 0
+  tileToPlace: {fileID: 0}
+  tileToRemove: {fileID: 0}
+  dropPrefab: {fileID: 7880113943053705827, guid: 27ab1f1377fa96b4fadcdbf1e0030892, type: 3}
+>>>>>>> Stashed changes:Assets/Scenes/Items/Scriptable/Birch_Log.asset

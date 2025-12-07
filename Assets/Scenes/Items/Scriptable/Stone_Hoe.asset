@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
-  m_Name: Stone_Knife
+  m_Name: Stone_Hoe
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: "\u041A\u0430\u043C'\u044F\u043D\u0438\u0439 \u043D\u0456\u0436"
-  icon: {fileID: -6099050445329199328, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
+  itemName: "\u041A\u0430\u043C'\u044F\u043D\u0430 \u043C\u043E\u0442\u0438\u043A\u0430"
+  icon: {fileID: -917194314, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 0
   maxStackSize: 1
-  price: 40
-  itemType: 0
+  price: 32
+  itemType: 2
   FeedAmount: 0
   isEatable: 0
-  toolType: 0
-  tileToPlace: {fileID: 0}
+  toolType: 1
+  tileToPlace: {fileID: 11400000, guid: e1785ae2974cb32428aa121a13d9b713, type: 2}
   tileToRemove: {fileID: 0}
   dropPrefab: {fileID: 0}

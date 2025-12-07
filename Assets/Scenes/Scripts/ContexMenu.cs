@@ -43,6 +43,7 @@ public class ContextMenuController : MonoBehaviour
         currentItem = item;
         currentSlot = slot;
 
+<<<<<<< Updated upstream
         menuObj.SetActive(true);
         
         // Перемещаем меню к мышке
@@ -54,6 +55,16 @@ public class ContextMenuController : MonoBehaviour
 
         ItemName.text = currentItem.itemName.ToString();
         ItemDescription.text = "Description: " + currentItem.description.ToString();
+=======
+        if (currentItem != null)
+        {
+            ItemName.text = currentItem.itemName;
+        } 
+        else 
+        {
+            ClearSelection();
+        }
+>>>>>>> Stashed changes
     }
 
     public void CloseMenu()
@@ -103,6 +114,10 @@ public class ContextMenuController : MonoBehaviour
         {
             // Если предметов много - просто обновляем текст
             currentSlot.AddItem(currentItem, currentSlot.amount);
+<<<<<<< Updated upstream
+=======
+            ItemName.text = currentItem.itemName; 
+>>>>>>> Stashed changes
         }
     }
 }

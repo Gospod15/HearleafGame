@@ -5,9 +5,11 @@ using System.Linq; // ДОБАВЛЕНО: Чтобы работал поиск .
 
 public class WorldGenerator : MonoBehaviour
 {
+<<<<<<< Updated upstream
     // ДОБАВЛЕНО: Singleton, чтобы PlayerController мог найти этот скрипт
+=======
+>>>>>>> Stashed changes
     public static WorldGenerator instance;
-
     [Header("Mining Settings")]
     public ItemData stoneItem; // ДОБАВЛЕНО: Предмет, который даем игроку
 
@@ -55,18 +57,27 @@ public class WorldGenerator : MonoBehaviour
 
     void Start()
     {
-        if (randomSeed) seed = Random.Range(-10000, 10000);
+        // --- [NEW] Перевірка завантаження ---
+        if (GameManager.instance != null && GameManager.instance.currentLoadedData != null)
+        {
+            // Якщо є збереження - беремо сід звідти
+            seed = GameManager.instance.currentLoadedData.worldSeed;
+            randomSeed = false; // Вимикаємо рандом
+        }
+        else if (randomSeed) 
+        {
+            seed = Random.Range(-10000, 10000);
+        }
+
         if (treeParent == null) treeParent = new GameObject("Trees_Container").transform;
         if (mainCamera == null) mainCamera = Camera.main;
 
         UpdateChunks();
     }
-
     void Update()
     {
         UpdateChunks();
     }
-
     void UpdateChunks()
     {
         if (mainCamera == null) return;

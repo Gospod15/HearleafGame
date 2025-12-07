@@ -12,8 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
   m_Name: Rotten_Oak_Log
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Rotten Birch Log
+  itemName: "\u0421\u0443\u0445\u0430 \u0434\u0443\u0431\u043E\u0432\u0430 \u043A\u043E\u043B\u043E\u0434\u0430"
   icon: {fileID: 3719068211130651045, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 1
+<<<<<<< Updated upstream:Assets/Scenes/Items/Rotten_Oak_Log.asset
   maxStackSize: 5
   description: 
+=======
+  maxStackSize: 30
+  price: 10
+  itemType: 0
+  FeedAmount: 0
+  isEatable: 0
+  toolType: 0
+  tileToPlace: {fileID: 0}
+  tileToRemove: {fileID: 0}
+  dropPrefab: {fileID: 7880113943053705827, guid: 99b6129778eca9748b1b70bd0e78e962, type: 3}
+>>>>>>> Stashed changes:Assets/Scenes/Items/Scriptable/Rotten_Oak_Log.asset
