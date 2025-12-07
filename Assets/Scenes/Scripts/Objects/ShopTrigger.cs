@@ -1,15 +1,14 @@
 using UnityEngine;
-using UnityEngine.InputSystem; // Если используешь Input System
+using UnityEngine.InputSystem;
 
 public class ShopTrigger : MonoBehaviour
 {
-    public float interactionRadius = 3f; // Твой радиус 3
+    public float interactionRadius = 3f;
     private Transform playerTransform;
     private bool isShopOpen = false;
 
     void Start()
     {
-        // Ищем игрока по тегу
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -20,17 +19,13 @@ public class ShopTrigger : MonoBehaviour
     void Update()
     {
         if (playerTransform == null) return;
-
-        // Считаем дистанцию
         float distance = Vector3.Distance(transform.position, playerTransform.position);
 
-        // Если мы рядом и нажали E
         if (distance <= interactionRadius && Keyboard.current.eKey.wasPressedThisFrame)
         {
             ToggleShop();
         }
 
-        // (Опционально) Закрыть магазин, если отошел далеко
         if (isShopOpen && distance > interactionRadius)
         {
             CloseShopForce();
@@ -55,7 +50,6 @@ public class ShopTrigger : MonoBehaviour
         ShopManager.instance.CloseShop();
     }
 
-    // Рисует круг в редакторе, чтобы видеть радиус
     void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;

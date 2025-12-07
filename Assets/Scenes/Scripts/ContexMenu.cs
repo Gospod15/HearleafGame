@@ -19,14 +19,11 @@ public class ContextMenuController : MonoBehaviour
 
     void Update()
     {
-        // 1. Дроп предмета на G
         if (Keyboard.current.gKey.wasPressedThisFrame)
         {
             OnDropClicked();
         }
 
-        // 2. ИСПРАВЛЕНИЕ: Очистка текста, если меню закрылось
-        // Сначала проверяем, что ссылка есть (!= null), а потом проверяем активность
         if (!InventoryMenu.gameObject.activeSelf)
         {
             ClearSelection();
@@ -45,7 +42,7 @@ public class ContextMenuController : MonoBehaviour
         } 
         else 
         {
-            ClearSelection(); // Если передали null, просто очищаем
+            ClearSelection();
         }
     }
 
@@ -81,7 +78,6 @@ public class ContextMenuController : MonoBehaviour
         }
     }
 
-    // Сделали метод public, чтобы его можно было вызвать из слота (если нужно)
     public void ClearSelection()
     {
         currentItem = null;

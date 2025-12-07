@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System.Collections.Generic; // Потрібно для списків
+using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour
 {
@@ -18,12 +18,11 @@ public class CameraController : MonoBehaviour
     private float fixedZ = -10f;
 
     [Header("Налаштування Прозорості (X-Ray)")]
-    public LayerMask treeLayer;       // Виберіть шар Tree
-    public float transparency = 0.5f; // Наскільки прозорим стає дерево (0.5 = 50%)
-    public float checkRadius = 1.5f;  // Радіус навколо гравця для перевірки
-    public float yOffsetCheck = 0.5f; // Зміщення перевірки (щоб перевіряти ноги/центр)
+    public LayerMask treeLayer;
+    public float transparency = 0.5f;
+    public float checkRadius = 1.5f;
+    public float yOffsetCheck = 0.5f;
 
-    // Список дерев, які зараз прозорі
     private List<SpriteRenderer> obscuredTrees = new List<SpriteRenderer>();
 
     void Start()
@@ -36,16 +35,13 @@ public class CameraController : MonoBehaviour
     {
         HandleZoom();
         HandleMovement();
-        HandleTransparency(); // Нова логіка
+        HandleTransparency();
     }
 
-    // --- 1. ЛОГІКА ПРОЗОРОСТІ (НОВЕ) ---
     void HandleTransparency()
     {
         if (target == null) return;
 
-        // 1. Шукаємо всі колайдери дерев у радіусі навколо гравця
-        // target.position + Vector3.up * yOffsetCheck — піднімаємо точку перевірки трохи вище ніг
         Collider2D[] hits = Physics2D.OverlapCircleAll(target.position + Vector3.up * yOffsetCheck, checkRadius, treeLayer);
 
         List<SpriteRenderer> currentHits = new List<SpriteRenderer>();
@@ -55,14 +51,9 @@ public class CameraController : MonoBehaviour
             SpriteRenderer sr = hit.GetComponent<SpriteRenderer>();
             if (sr != null)
             {
-                // ВАЖЛИВА ПЕРЕВІРКА:
-                // Ми робимо прозорим дерево, ТІЛЬКИ якщо гравець знаходиться ВИЩЕ (Y) за дерево (тобто за ним),
-                // або дуже близько до центру.
-                // hit.transform.position.y — це зазвичай точка Pivot (низ стовбура).
-                
+
                 if (target.position.y > hit.transform.position.y) 
                 {
-                    // Робимо напівпрозорим
                     Color color = sr.color;
                     color.a = transparency;
                     sr.color = color;
@@ -72,19 +63,18 @@ public class CameraController : MonoBehaviour
             }
         }
 
-        // 2. Відновлюємо колір дерев, від яких гравець відійшов
+
         foreach (var oldSr in obscuredTrees)
         {
-            // Якщо старого дерева немає в списку нових влучань — відновлюємо його
+
             if (!currentHits.Contains(oldSr) && oldSr != null)
             {
                 Color color = oldSr.color;
-                color.a = 1f; // Повна непрозорість
+                color.a = 1f;
                 oldSr.color = color;
             }
         }
 
-        // 3. Оновлюємо список активних дерев
         obscuredTrees = currentHits;
     }
 

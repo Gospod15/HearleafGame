@@ -17,5 +17,10 @@ MonoBehaviour:
   isStackable: 1
   maxStackSize: 5
   price: 25
-  description: 
-  dropPrefab: {fileID: 0}
+  itemType: 0
+  FeedAmount: 0
+  isEatable: 0
+  toolType: 0
+  tileToPlace: {fileID: 0}
+  tileToRemove: {fileID: 0}
+  dropPrefab: {fileID: 7880113943053705827, guid: 27ab1f1377fa96b4fadcdbf1e0030892, type: 3}

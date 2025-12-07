@@ -1,15 +1,15 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
-using System.Linq; // ДОБАВЛЕНО: Чтобы работал поиск .Contains
+using System.Linq;
 
 public class WorldGenerator : MonoBehaviour
 {
-    // ДОБАВЛЕНО: Singleton, чтобы PlayerController мог найти этот скрипт
+
     public static WorldGenerator instance;
 
     [Header("Mining Settings")]
-    public ItemData stoneItem; // ДОБАВЛЕНО: Предмет, который даем игроку
+    public ItemData stoneItem;
 
     [Header("Налаштування Чанків")]
     public int chunkSize = 25; 
@@ -44,10 +44,8 @@ public class WorldGenerator : MonoBehaviour
     [Range(0, 1)] public float mountainLevel = 0.85f;
     [Range(0, 1)] public float forestThreshold = 0.4f;
 
-    // Словник активних чанків
     private Dictionary<Vector2Int, List<GameObject>> activeChunks = new Dictionary<Vector2Int, List<GameObject>>();
 
-    // ДОБАВЛЕНО: Инициализация instance
     void Awake()
     {
         instance = this;
@@ -147,7 +145,6 @@ public class WorldGenerator : MonoBehaviour
 
                 TileBase tileToPlace = null; 
 
-                // --- ЛОГІКА ВИБОРУ ТАЙЛУ ---
                 if (height < waterLevel)
                 {
                     tileToPlace = waterTile;
@@ -184,7 +181,6 @@ public class WorldGenerator : MonoBehaviour
                     groundTilemap.SetTile(pos, tileToPlace);
                 }
 
-                // --- ДЕРЕВА ---
                 if (!isOccupied && treePrefabs != null && treePrefabs.Length > 0)
                 {
                     float moisture = GetNoise(globalX, globalY, seed + 500, scale * 0.8f);
@@ -238,23 +234,18 @@ public class WorldGenerator : MonoBehaviour
         Gizmos.DrawWireCube(camPos, new Vector3((cameraWidth + tileBuffer) * 2, (cameraHeight + tileBuffer) * 2, 0));
     }
 
-    // --- ЛОГИКА ДОБЫЧИ КАМНЯ ---
     public bool TryMineStone(Vector3 playerWorldPos)
     {
-        // Переводимо позицію гравця в координати сітки
         Vector3Int centerPos = groundTilemap.WorldToCell(playerWorldPos);
 
-        // Проходимось циклом 3x3 (від -1 до +1 по X та Y)
         for (int x = -1; x <= 1; x++)
         {
             for (int y = -1; y <= 1; y++)
             {
                 Vector3Int checkPos = new Vector3Int(centerPos.x + x, centerPos.y + y, 0);
                 
-                // Отримуємо тайл у цій клітинці
                 TileBase currentTile = groundTilemap.GetTile(checkPos);
 
-                // ВАЖЛИВО: Перевірка .Contains тепер працює завдяки System.Linq
                 if (currentTile != null && DetailsTileOnGrass.Contains(currentTile))
                 {
                     if (stoneItem == null) 
@@ -263,12 +254,10 @@ public class WorldGenerator : MonoBehaviour
                         return false;
                     }
 
-                    // 1. Додаємо камінь в інвентар
                     bool added = InventoryManager.instance.AddItem(stoneItem,1);
                     
                     if (added)
                     {
-                        // 2. Якщо місце було - замінюємо тайл на траву
                         TileBase randomGrass = grassTiles[Random.Range(0, grassTiles.Length)];
                         groundTilemap.SetTile(checkPos, randomGrass);
 

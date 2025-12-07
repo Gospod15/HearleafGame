@@ -1,4 +1,8 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
+
+public enum ItemType { Resource, Food, Tool }
+public enum ToolType { None, Hoe, Axe, Pickaxe }
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
 public class ItemData : ScriptableObject
@@ -8,9 +12,17 @@ public class ItemData : ScriptableObject
     public bool isStackable;
     public int maxStackSize = 30;
     public int price;
-    
-    [TextArea] public string description;
 
-    // НОВОЕ: Какой префаб создавать в мире, если выбросить этот предмет
+    [Header("Тип")]
+    public ItemType itemType;
+
+    [Header("Параметри Їжі")]
+    public int FeedAmount;
+    public bool isEatable;
+
+    [Header("Параметри Інструмента")]
+    public ToolType toolType; 
+    public TileBase tileToPlace;
+    public TileBase tileToRemove;
     public GameObject dropPrefab; 
 }

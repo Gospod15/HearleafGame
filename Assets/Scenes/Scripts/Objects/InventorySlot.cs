@@ -11,8 +11,10 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     public ItemData item;
     public int amount;
     
-    // Флаг: чи це слот магазину?
     public bool isShopSlot = false; 
+
+    private float lastClickTime; 
+    private const float DOUBLE_CLICK_SPEED = 0.3f; 
 
     public void AddItem(ItemData newItem, int count)
     {
@@ -21,8 +23,6 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
         iconComponent.sprite = item.icon;
         iconComponent.enabled = true;
 
-        // В магазині показуємо кількість завжди (щоб бачити залишок товару)
-        // В інвентарі - тільки якщо стакається
         if (isShopSlot || (item.isStackable && amount > 1))
         {
             amountText.text = amount.ToString();
@@ -47,27 +47,72 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     {
         if (eventData.button == PointerEventData.InputButton.Left)
         {
-            // === ЛОГІКА МАГАЗИНУ ===
+            float timeSinceLastClick = Time.time - lastClickTime;
+            bool isDoubleClick = timeSinceLastClick <= DOUBLE_CLICK_SPEED;
+
             if (isShopSlot)
             {
                 if (ShopManager.instance != null && item != null)
                 {
-                    // 1. Показуємо ціну
-                    ShopManager.instance.SelectShopItem(item);
-                    // 2. Пробуємо купити 1 штуку
-                    ShopManager.instance.TryBuyItem(this);
+                    if (isDoubleClick)
+                    {
+                        ShopManager.instance.TryBuyItem(this);
+                    }
+                    else
+                    {
+                        ShopManager.instance.SelectShopItem(item);
+                    }
                 }
-                return; // Виходимо, щоб не відкрити меню викидання
+            }
+            else 
+            {
+                if (isDoubleClick)
+                {
+                    TryUseItem(); 
+                }
+                else
+                {
+                    if (ContextMenuController.instance != null)
+                    {
+                        if (item != null)
+                            ContextMenuController.instance.OpenMenu(item, this);
+                        else
+                            ContextMenuController.instance.ClearSelection();
+                    }
+                }
             }
 
-            // === ЛОГІКА ІНВЕНТАРЮ (твоя стара) ===
-            if (ContextMenuController.instance != null)
+            lastClickTime = Time.time;
+        }
+    }
+
+    private void TryUseItem()
+    {
+        if (item == null) return;
+
+        PlayerController player = FindObjectOfType<PlayerController>();
+        if (player == null) return;
+
+        if (item.itemType == ItemType.Food)
+        {
+            if (item.isEatable)
             {
-                if (item != null)
-                    ContextMenuController.instance.OpenMenu(item, this);
-                else
-                    ContextMenuController.instance.ClearSelection();
+                player.Eat(item.FeedAmount);
+                Debug.Log($"З'їв {item.itemName}");
+                
+                amount--;
+                if (amount <= 0) {
+                    ClearSlot();
+                    if (ContextMenuController.instance != null) ContextMenuController.instance.ClearSelection();
+                } else {
+                    AddItem(item, amount);
+                }
             }
+        }
+        else if (item.itemType == ItemType.Tool)
+        {
+            player.EquipItem(item);
+            
         }
     }
 }

@@ -14,15 +14,29 @@ public class InventoryManager : MonoBehaviour
 
     void Start()
     {
-        // Знаходимо всі слоти в дочірніх об'єктах
         slots = slotsParent.GetComponentsInChildren<InventorySlot>();
     }
 
-    // --- 1. ДОДАВАННЯ ПРЕДМЕТА ---
-    // Я перейменував метод з Add на AddItem, щоб він збігався з ShopManager
+    public void RefreshUI()
+    {
+        if (slots == null) return;
+
+        foreach (InventorySlot slot in slots)
+        {
+            if (slot.item != null)
+            {
+                slot.AddItem(slot.item, slot.amount);
+            }
+            else
+            {
+                slot.ClearSlot();
+            }
+        }
+        Debug.Log("Інвентар UI оновлено!");
+    }
+
     public bool AddItem(ItemData item, int amount)
     {
-        // Сценарій 1: Предмет стакається
         if (item.isStackable)
         {
             foreach (InventorySlot slot in slots)
@@ -33,7 +47,7 @@ public class InventoryManager : MonoBehaviour
                     int amountToAdd = Mathf.Min(spaceInSlot, amount);
 
                     slot.amount += amountToAdd;
-                    slot.AddItem(item, slot.amount); // Оновлюємо візуал
+                    slot.AddItem(item, slot.amount); 
                     
                     amount -= amountToAdd;
                     if (amount <= 0) return true;
@@ -41,7 +55,6 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
-        // Сценарій 2: Шукаємо порожній слот
         if (amount > 0)
         {
             foreach (InventorySlot slot in slots)
@@ -66,8 +79,6 @@ public class InventoryManager : MonoBehaviour
         return true;
     }
 
-    // --- 2. ПЕРЕВІРКА КІЛЬКОСТІ (ГРОШЕЙ) ---
-    // Цього методу у тебе не було!
     public int GetItemAmount(ItemData itemToCheck)
     {
         int total = 0;
@@ -78,12 +89,9 @@ public class InventoryManager : MonoBehaviour
                 total += slot.amount;
             }
         }
-        // Debug.Log($"Перевіряємо {itemToCheck.itemName}: знайдено {total}");
         return total;
     }
 
-    // --- 3. ВИДАЛЕННЯ ПРЕДМЕТА (ОПЛАТА) ---
-    // Цього методу теж не було!
     public void RemoveItem(ItemData itemToRemove, int amountToRemove)
     {
         foreach (InventorySlot slot in slots)
@@ -101,15 +109,8 @@ public class InventoryManager : MonoBehaviour
                     slot.amount = 0;
                 }
 
-                // Оновлюємо вигляд слота
-                if (slot.amount <= 0)
-                {
-                    slot.ClearSlot();
-                }
-                else
-                {
-                    slot.AddItem(slot.item, slot.amount);
-                }
+                if (slot.amount <= 0) slot.ClearSlot();
+                else slot.AddItem(slot.item, slot.amount);
 
                 if (amountToRemove <= 0) return;
             }

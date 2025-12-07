@@ -106,10 +106,10 @@ TextureImporter:
       name: Bars_0
       rect:
         serializedVersion: 2
-        x: 1
-        y: 34
-        width: 30
-        height: 27
+        x: 0
+        y: 33
+        width: 32
+        height: 30
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,10 +128,10 @@ TextureImporter:
       name: Bars_1
       rect:
         serializedVersion: 2
-        x: 7
-        y: 1
-        width: 20
-        height: 30
+        x: 0
+        y: 0
+        width: 32
+        height: 33
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -142,6 +142,28 @@ TextureImporter:
       bones: []
       spriteID: deab609109ed20bf0800000000000000
       internalID: -359480309759690003
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bars_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 63
+        width: 32
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87d6b24f360bc8b41aca28592b2b03e7
+      internalID: 1931518260
       vertices: []
       indices: 
       edges: []
@@ -164,6 +186,7 @@ TextureImporter:
     nameFileIdTable:
       Bars_0: -2142185268650758390
       Bars_1: -359480309759690003
+      Bars_2: 1931518260
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2103094486954689484}
   - component: {fileID: 7834659229247913630}
   - component: {fileID: 6250949299697608216}
+  - component: {fileID: 1256390108487919123}
   m_Layer: 3
   m_Name: tree2
   m_TagString: Untagged
@@ -27,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 4704458390191307699}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.8525405, y: -0.111053705, z: 0}
+  m_LocalPosition: {x: -12.422, y: 3.4378858, z: 0}
   m_LocalScale: {x: 1.75, y: 1.75, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -137,3 +138,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.57, y: 0.3}
   m_EdgeRadius: 0
+--- !u!114 &1256390108487919123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4704458390191307699}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 176b2be2640110b4ab256ad1822f5b65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TreeScript
+  health: 2
+  logPrefab: {fileID: 7880113943053705827, guid: 3e28ba74b8f90384a8596846208e468a, type: 3}
+  dropAmount: 1

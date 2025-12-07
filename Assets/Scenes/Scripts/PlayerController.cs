@@ -2,71 +2,83 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.Tilemaps;
 
-[RequireComponent(typeof(Rigidbody2D))] // Гарантирует, что Rigidbody2D есть на объекте
+[RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Взаємодія")]
-    public float interactionRadius = 2.0f; // Радіус, в якому можна підняти предмет
-    public LayerMask interactionLayer;     // Шар предметів (щоб не плутати з ворогами)
+    [Header("Здоров'я та Голод")]
+    public float maxHealth = 100.0f;
+    public float currentHealth;
+    public float maxFeed = 100.0f;
+    public float currentFeed;
+    public float FeedDrain = 0.005f; 
+    public float starvationDamage = 5f;
 
-    [Header("Настройки Выносливости")]
+    [Header("Стаміна")]
     public float maxStamina = 100f;
     public float currentStamina;
-    public float staminaDrain = 15f; // Расход в секунду
-    public float staminaRegen = 7f;  // Восстановление в секунду
-    public TextMeshProUGUI staminaText;         // UI текст
+    public float staminaRegen = 7f;
+    public float staminaDrain = 15f; 
 
-    [Header("Настройки Скорости")]
-    public float runSpeed = 12f;
-    public float walkSpeed = 5f;
-    private float currentSpeed;
+    [Header("UI")]
+    public TextMeshProUGUI healthText;
+    public TextMeshProUGUI feedText; 
+    public TextMeshProUGUI staminaText;
+    public Image UIInventory; 
 
-    [Header("Интерфейс")]
-    public Image UIInventory;
-
-    // Скрытые компоненты
+    private ToolController toolController;
     private Rigidbody2D rb;
     private Animator animator;
     private Vector2 movementInput;
-    private string playerName; // Имя с маленькой буквы (camelCase) для приватных полей
+    public float runSpeed = 7f;
+    public float walkSpeed = 4f;
+    private float currentSpeed;
+
+    [Header("Збирання (Руками на E)")]
+    public float interactionRadius = 2.0f; 
+    public LayerMask interactionLayer; 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        toolController = GetComponent<ToolController>(); 
 
-        // Проверка на GameManager, чтобы избежать ошибок, если запускаем сцену отдельно
-        if (GameManager.instance != null)
-        {
-            playerName = GameManager.instance.playername;
-        }
-
+        currentHealth = maxHealth;
+        currentFeed = maxFeed;
         currentStamina = maxStamina;
         currentSpeed = walkSpeed;
 
-        UpdateStaminaUI();
+        if (UIInventory != null) UIInventory.gameObject.SetActive(false);
+        UpdateUI();
     }
 
     void Update()
     {
-        // 1. Считывание ввода (Input)
+        if (currentHealth <= 0) return;
+
         var keyboard = Keyboard.current;
-        if (keyboard == null) return; // Защита, если клавиатура не подключена
+        if (keyboard == null) return;
 
         movementInput = Vector2.zero;
         if (keyboard.wKey.isPressed) movementInput.y += 1;
         if (keyboard.sKey.isPressed) movementInput.y -= 1;
         if (keyboard.aKey.isPressed) movementInput.x -= 1;
         if (keyboard.dKey.isPressed) movementInput.x += 1;
-
-        // Нормализуем вектор сразу, чтобы движение по диагонали не было быстрее
         movementInput.Normalize();
 
-        // 2. Обработка действий (Инвентарь и Взаимодействие)
         if (keyboard.iKey.wasPressedThisFrame && UIInventory != null)
         {
-            UIInventory.gameObject.SetActive(!UIInventory.gameObject.activeSelf);
+            bool isActive = !UIInventory.gameObject.activeSelf;
+            UIInventory.gameObject.SetActive(isActive);
+            
+            if (isActive && InventoryManager.instance != null)
+            {
+                InventoryManager.instance.RefreshUI();
+            }
+
+            if (ContextMenuController.instance != null) ContextMenuController.instance.ClearSelection();
         }
 
         if (keyboard.eKey.wasPressedThisFrame)
@@ -74,105 +86,22 @@ public class PlayerController : MonoBehaviour
             TryInteract();
         }
 
-        // 3. Логика Стамины и Бега
-        // Важно: проверяем движение ПОСЛЕ считывания кнопок
-        bool isMoving = movementInput.sqrMagnitude > 0; 
         bool isSprinting = keyboard.shiftKey.isPressed;
-
-        HandleStamina(isMoving, isSprinting);
-
-        // 4. Анимация
+        HandleMovementAndStamina(isSprinting);
+        HandleHunger();
         UpdateAnimation();
     }
 
-    void FixedUpdate()
-    {
-        // Физическое передвижение
-        rb.MovePosition(rb.position + movementInput * currentSpeed * Time.fixedDeltaTime);
-    }
-
-    // --- Вспомогательные методы для чистоты кода ---
-
-    void HandleStamina(bool isMoving, bool isSprinting)
-    {
-        if (isMoving && isSprinting && currentStamina > 0)
-        {
-            // Режим бега
-            currentSpeed = runSpeed;
-            currentStamina -= staminaDrain * Time.deltaTime;
-        }
-        else
-        {
-            // Режим ходьбы или стояния
-            currentSpeed = walkSpeed;
-
-            // Восстановление энергии
-            if (currentStamina < maxStamina)
-            {
-                currentStamina += staminaRegen * Time.deltaTime;
-            }
-        }
-
-        // Ограничение значений
-        currentStamina = Mathf.Clamp(currentStamina, 0, maxStamina);
-        
-        UpdateStaminaUI();
-    }
-
-    void UpdateStaminaUI()
-    {
-        if (staminaText != null)
-        {
-            // "F0" округляет до целого числа (без запятых)
-            staminaText.text = currentStamina.ToString("F0"); 
-        }
-    }
-
-    void UpdateAnimation()
-    {
-        if (animator != null)
-        {
-            animator.SetFloat("X", movementInput.x);
-            animator.SetFloat("Y", movementInput.y);
-            animator.SetFloat("Speed", movementInput.sqrMagnitude);
-        }
-    }
-
-    void TryInteract()
-    {
-        Collider2D hitCollider = Physics2D.OverlapCircle(transform.position, interactionRadius, interactionLayer);
-
-        if (hitCollider != null)
-        {
-            // Перевіряємо, чи є на об'єкті наш скрипт
-            ItemInWorldManager itemInWorld = hitCollider.GetComponent<ItemInWorldManager>();
-            
-            if (itemInWorld != null)
-            {
-                itemInWorld.Pickup();
-                return; // Якщо підібрали, виходимо (щоб одночасно не копати землю)
-            }
-        }
-
-        // 2. Якщо предметів немає, пробуємо копати землю (твоя старая логіка)
-        bool mined = false;
-        if (WorldGenerator.instance != null)
-        {
-            mined = WorldGenerator.instance.TryMineStone(transform.position);
-            if (mined)
-            {
-                Debug.Log("Rock + 1 (Mining)");
-                return;
-            }
-        }
-
-        Debug.Log("Нічого немає поруч");
-    }
-
-    // (Опціонально) Щоб бачити радіус у редакторі Unity
-    void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, interactionRadius);
-    }
+    void TryInteract() { Collider2D hit = Physics2D.OverlapCircle(transform.position, interactionRadius, interactionLayer); if (hit != null) { ItemInWorldManager w = hit.GetComponent<ItemInWorldManager>(); if (w != null) { w.Pickup(); return; } } if (WorldGenerator.instance != null) { WorldGenerator.instance.TryMineStone(transform.position); } }
+    public void EquipItem(ItemData i) { if (toolController != null) toolController.Equip(i); }
+    public void ReduceStamina(float a) { currentStamina -= a; if (currentStamina < 0) currentStamina = 0; UpdateUI(); }
+    public void Eat(float a) { currentFeed += a; if (currentFeed > maxFeed) currentFeed = maxFeed; UpdateUI(); }
+    void HandleHunger() { if (currentFeed > 0) currentFeed -= FeedDrain * Time.deltaTime; else { currentFeed = 0; TakeDamage(starvationDamage * Time.deltaTime); } UpdateUI(); }
+    public void TakeDamage(float d) { currentHealth -= d; UpdateUI(); if (currentHealth <= 0) Die(); }
+    void HandleMovementAndStamina(bool s) { bool m = movementInput.sqrMagnitude > 0; bool st = currentFeed <= 0; if (m && s && currentStamina > 0 && !st) { currentSpeed = runSpeed; currentStamina -= staminaDrain * Time.deltaTime; } else { currentSpeed = walkSpeed; if (currentStamina < maxStamina) currentStamina += staminaRegen * Time.deltaTime; } }
+    void FixedUpdate() { if (currentHealth > 0) rb.MovePosition(rb.position + movementInput * currentSpeed * Time.fixedDeltaTime); }
+    void Die() { if (animator != null) animator.SetBool("IsDead", true); this.enabled = false; }
+    void UpdateAnimation() { if (animator != null) { animator.SetFloat("X", movementInput.x); animator.SetFloat("Y", movementInput.y); animator.SetFloat("Speed", movementInput.sqrMagnitude); } }
+    void UpdateUI() { if (healthText != null) healthText.text = currentHealth.ToString("F0"); if (feedText != null) feedText.text = currentFeed.ToString("F0"); if (staminaText != null) staminaText.text = currentStamina.ToString("F0"); }
+    void OnDrawGizmosSelected() { Gizmos.color = Color.yellow; Gizmos.DrawWireSphere(transform.position, interactionRadius); }
 }
