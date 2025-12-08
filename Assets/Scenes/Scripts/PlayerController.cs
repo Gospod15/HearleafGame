@@ -28,12 +28,14 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI staminaText;
     public Image UIInventory; 
 
-    [Header("Збирання")]
+    [Header("Збирання (Руками на E)")]
     public float interactionRadius = 2.0f; 
-    public LayerMask interactionLayer; 
+    public LayerMask interactionLayer;
+
     private ToolController toolController;
     private Rigidbody2D rb;
     private Animator animator;
+    
     private Vector2 movementInput;
     public float runSpeed = 7f;
     public float walkSpeed = 4f;
@@ -65,15 +67,10 @@ public class PlayerController : MonoBehaviour
 
             if (data.currentHealth > 1f) currentHealth = data.currentHealth;
             if (data.currentFeed > 1f) currentFeed = data.currentFeed;
-            
             currentStamina = data.currentStamina;
         }
 
-        if (UIInventory != null) 
-        {
-            UIInventory.gameObject.SetActive(false);
-        }
-        
+        if (UIInventory != null) UIInventory.gameObject.SetActive(false);
         UpdateUI();
     }
 
@@ -91,21 +88,12 @@ public class PlayerController : MonoBehaviour
         if (keyboard.dKey.isPressed) movementInput.x += 1;
         movementInput.Normalize();
 
-        // Інвентар
         if (keyboard.iKey.wasPressedThisFrame && UIInventory != null)
         {
             bool isActive = !UIInventory.gameObject.activeSelf;
             UIInventory.gameObject.SetActive(isActive);
-            
-            if (isActive && InventoryManager.instance != null)
-            {
-                InventoryManager.instance.RefreshUI();
-            }
-
-            if (!isActive && ContextMenuController.instance != null) 
-            {
-                ContextMenuController.instance.ClearSelection();
-            }
+            if (isActive && InventoryManager.instance != null) InventoryManager.instance.RefreshUI();
+            if (!isActive && ContextMenuController.instance != null) ContextMenuController.instance.ClearSelection();
         }
 
         if (keyboard.eKey.wasPressedThisFrame)
@@ -117,7 +105,6 @@ public class PlayerController : MonoBehaviour
         HandleMovementAndStamina(isSprinting);
         
         HandleHunger();
-
         UpdateAnimation();
     }
 
@@ -132,6 +119,17 @@ public class PlayerController : MonoBehaviour
     void TryInteract() 
     { 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactionRadius, interactionLayer);
+        
+        foreach (var hit in hits)
+        {
+            ItemInWorldManager itemInWorld = hit.GetComponent<ItemInWorldManager>();
+            
+            if (itemInWorld != null)
+            {
+                itemInWorld.Pickup();
+                return; 
+            }
+        }
         
         if (WorldGenerator.instance != null) 
         { 
@@ -163,27 +161,21 @@ public class PlayerController : MonoBehaviour
     { 
         if (currentFeed > 0) 
         {
-            currentFeed -= FeedDrain * Time.deltaTime; 
+            currentFeed -= FeedDrain/20 * Time.deltaTime; 
         }
         else 
         { 
             currentFeed = 0; 
             TakeDamage(starvationDamage * Time.deltaTime); 
         } 
-        
         UpdateUI(); 
     }
 
     public void TakeDamage(float damage) 
     { 
         currentHealth -= damage; 
-        
         UpdateUI(); 
-        
-        if (currentHealth <= 0) 
-        {
-            Die(); 
-        }
+        if (currentHealth <= 0) Die(); 
     }
 
     void HandleMovementAndStamina(bool isSprinting) 
@@ -199,7 +191,6 @@ public class PlayerController : MonoBehaviour
         else 
         { 
             currentSpeed = walkSpeed; 
-            
             if (currentStamina < maxStamina) 
             {
                 currentStamina += staminaRegen * Time.deltaTime; 

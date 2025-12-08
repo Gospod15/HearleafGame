@@ -11712,7 +11712,7 @@ MonoBehaviour:
   maxFeed: 100
   currentFeed: 100
   FeedDrain: 1
-  starvationDamage: 5
+  starvationDamage: 1
   maxStamina: 100
   currentStamina: 100
   staminaRegen: 7
