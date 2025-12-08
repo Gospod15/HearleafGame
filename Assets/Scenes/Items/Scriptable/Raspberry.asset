@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
   m_Name: Raspberry
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: "\u041D\u0430\u0441\u0456\u043D\u043D\u044F \u043A\u0430\u0432\u0443\u043D\u0430"
+  itemName: "\u041C\u0430\u043B\u0438\u043D\u0430"
   icon: {fileID: -850858628, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
-  maxStackSize: 40
-  price: 1
   isStackable: 1
+  maxStackSize: 30
+  price: 1
+  itemType: 1
+  FeedAmount: 2
   isEatable: 1
-  FeedAmount: 20
-  description: 
+  toolType: 0
+  tileToPlace: {fileID: 0}
+  tileToRemove: {fileID: 0}
   dropPrefab: {fileID: 0}

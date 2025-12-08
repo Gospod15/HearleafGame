@@ -15,7 +15,12 @@ MonoBehaviour:
   itemName: "\u041D\u0430\u0441\u0456\u043D\u043D\u044F \u043F\u0448\u0435\u043D\u0438\u0446\u0456"
   icon: {fileID: -1577216877, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 0
-  maxStackSize: 1
+  maxStackSize: 30
   price: 0
-  description: 
+  itemType: 0
+  FeedAmount: 0
+  isEatable: 0
+  toolType: 0
+  tileToPlace: {fileID: 0}
+  tileToRemove: {fileID: 0}
   dropPrefab: {fileID: 0}

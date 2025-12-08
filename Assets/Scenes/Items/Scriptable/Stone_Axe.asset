@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
   m_Name: Stone_Axe
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Stone Axe
+  itemName: "\u041A\u0430\u043C'\u044F\u043D\u0430 \u0441\u043E\u043A\u0438\u0440\u0430"
   icon: {fileID: 4639506938558671751, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 0
   maxStackSize: 1

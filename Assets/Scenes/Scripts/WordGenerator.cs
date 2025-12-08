@@ -274,4 +274,20 @@ public class WorldGenerator : MonoBehaviour
         }
         return false;
     }
+
+    public void GenerateWorld()
+    {
+        groundTilemap.ClearAllTiles();
+        
+        foreach (var chunk in activeChunks.Values)
+        {
+            foreach (var tree in chunk)
+            {
+                if(tree != null) Destroy(tree);
+            }
+        }
+        activeChunks.Clear();
+
+        UpdateChunks();
+    }
 }

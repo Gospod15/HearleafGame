@@ -38,7 +38,7 @@ public class ContextMenuController : MonoBehaviour
 
         if (currentItem != null)
         {
-            ItemName.text = "Selected: " + currentItem.itemName;
+            ItemName.text =  currentItem.itemName;
         } 
         else 
         {
@@ -74,7 +74,7 @@ public class ContextMenuController : MonoBehaviour
         else
         {
             currentSlot.AddItem(currentItem, currentSlot.amount);
-            ItemName.text = "Selected: " + currentItem.itemName; 
+            ItemName.text = currentItem.itemName; 
         }
     }
 

@@ -12,8 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
   m_Name: Oak_Branch
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Oak Branch
+  itemName: "\u0414\u0443\u0431\u043E\u0432\u0430 \u0433\u0456\u043B\u043A\u0430"
   icon: {fileID: -2064859774160998932, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 1
-  maxStackSize: 15
-  description: 
+  maxStackSize: 30
+  price: 0
+  itemType: 0
+  FeedAmount: 0
+  isEatable: 0
+  toolType: 0
+  tileToPlace: {fileID: 0}
+  tileToRemove: {fileID: 0}
+  dropPrefab: {fileID: 0}

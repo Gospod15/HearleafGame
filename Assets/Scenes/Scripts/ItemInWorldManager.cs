@@ -13,7 +13,6 @@ public class ItemInWorldManager : MonoBehaviour
             
             if (added)
             {
-                Debug.Log($"Підібрано: {itemData.itemName}");
                 Destroy(gameObject); 
             }
             else

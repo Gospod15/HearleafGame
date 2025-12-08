@@ -12,12 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f52ec317dc1fa6c49beafccdd6e9f054, type: 3}
   m_Name: Watermelon_Piece
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: "\u0428\u043C\u0430\u0442\u043E\u0447\u043E\u043A \u043A\u0430\u0432\u0443\u043D\u0430"
+  itemName: "\u0428\u043C\u0430\u0442\u043E\u043A \u043A\u0430\u0432\u0443\u043D\u0430"
   icon: {fileID: -392974973, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
-  maxStackSize: 20
-  price: 2
   isStackable: 1
+  maxStackSize: 30
+  price: 2
+  itemType: 1
+  FeedAmount: 5
   isEatable: 1
-  FeedAmount: 20
-  description: 
+  toolType: 0
+  tileToPlace: {fileID: 0}
+  tileToRemove: {fileID: 0}
   dropPrefab: {fileID: 0}

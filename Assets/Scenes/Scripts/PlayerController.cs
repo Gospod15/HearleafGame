@@ -2,7 +2,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.Tilemaps;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -10,10 +9,12 @@ public class PlayerController : MonoBehaviour
     [Header("Здоров'я та Голод")]
     public float maxHealth = 100.0f;
     public float currentHealth;
+    
     public float maxFeed = 100.0f;
     public float currentFeed;
-    public float FeedDrain = 0.005f; 
-    public float starvationDamage = 5f;
+    
+    public float FeedDrain = 0.02f; 
+    public float starvationDamage = 1f;
 
     [Header("Стаміна")]
     public float maxStamina = 100f;
@@ -27,6 +28,9 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI staminaText;
     public Image UIInventory; 
 
+    [Header("Збирання")]
+    public float interactionRadius = 2.0f; 
+    public LayerMask interactionLayer; 
     private ToolController toolController;
     private Rigidbody2D rb;
     private Animator animator;
@@ -34,10 +38,6 @@ public class PlayerController : MonoBehaviour
     public float runSpeed = 7f;
     public float walkSpeed = 4f;
     private float currentSpeed;
-
-    [Header("Збирання (Руками на E)")]
-    public float interactionRadius = 2.0f; 
-    public LayerMask interactionLayer; 
 
     void Start()
     {
@@ -50,7 +50,30 @@ public class PlayerController : MonoBehaviour
         currentStamina = maxStamina;
         currentSpeed = walkSpeed;
 
-        if (UIInventory != null) UIInventory.gameObject.SetActive(false);
+        if (GameManager.instance != null && GameManager.instance.currentLoadedData != null)
+        {
+            SaveData data = GameManager.instance.currentLoadedData;
+
+            if (data.playerPosition.Length == 3)
+            {
+                if (data.playerPosition[0] != 0 || data.playerPosition[1] != 0)
+                {
+                    Vector3 loadedPos = new Vector3(data.playerPosition[0], data.playerPosition[1], data.playerPosition[2]);
+                    transform.position = loadedPos;
+                }
+            }
+
+            if (data.currentHealth > 1f) currentHealth = data.currentHealth;
+            if (data.currentFeed > 1f) currentFeed = data.currentFeed;
+            
+            currentStamina = data.currentStamina;
+        }
+
+        if (UIInventory != null) 
+        {
+            UIInventory.gameObject.SetActive(false);
+        }
+        
         UpdateUI();
     }
 
@@ -68,6 +91,7 @@ public class PlayerController : MonoBehaviour
         if (keyboard.dKey.isPressed) movementInput.x += 1;
         movementInput.Normalize();
 
+        // Інвентар
         if (keyboard.iKey.wasPressedThisFrame && UIInventory != null)
         {
             bool isActive = !UIInventory.gameObject.activeSelf;
@@ -78,7 +102,10 @@ public class PlayerController : MonoBehaviour
                 InventoryManager.instance.RefreshUI();
             }
 
-            if (ContextMenuController.instance != null) ContextMenuController.instance.ClearSelection();
+            if (!isActive && ContextMenuController.instance != null) 
+            {
+                ContextMenuController.instance.ClearSelection();
+            }
         }
 
         if (keyboard.eKey.wasPressedThisFrame)
@@ -88,20 +115,128 @@ public class PlayerController : MonoBehaviour
 
         bool isSprinting = keyboard.shiftKey.isPressed;
         HandleMovementAndStamina(isSprinting);
+        
         HandleHunger();
+
         UpdateAnimation();
     }
 
-    void TryInteract() { Collider2D hit = Physics2D.OverlapCircle(transform.position, interactionRadius, interactionLayer); if (hit != null) { ItemInWorldManager w = hit.GetComponent<ItemInWorldManager>(); if (w != null) { w.Pickup(); return; } } if (WorldGenerator.instance != null) { WorldGenerator.instance.TryMineStone(transform.position); } }
-    public void EquipItem(ItemData i) { if (toolController != null) toolController.Equip(i); }
-    public void ReduceStamina(float a) { currentStamina -= a; if (currentStamina < 0) currentStamina = 0; UpdateUI(); }
-    public void Eat(float a) { currentFeed += a; if (currentFeed > maxFeed) currentFeed = maxFeed; UpdateUI(); }
-    void HandleHunger() { if (currentFeed > 0) currentFeed -= FeedDrain * Time.deltaTime; else { currentFeed = 0; TakeDamage(starvationDamage * Time.deltaTime); } UpdateUI(); }
-    public void TakeDamage(float d) { currentHealth -= d; UpdateUI(); if (currentHealth <= 0) Die(); }
-    void HandleMovementAndStamina(bool s) { bool m = movementInput.sqrMagnitude > 0; bool st = currentFeed <= 0; if (m && s && currentStamina > 0 && !st) { currentSpeed = runSpeed; currentStamina -= staminaDrain * Time.deltaTime; } else { currentSpeed = walkSpeed; if (currentStamina < maxStamina) currentStamina += staminaRegen * Time.deltaTime; } }
-    void FixedUpdate() { if (currentHealth > 0) rb.MovePosition(rb.position + movementInput * currentSpeed * Time.fixedDeltaTime); }
-    void Die() { if (animator != null) animator.SetBool("IsDead", true); this.enabled = false; }
-    void UpdateAnimation() { if (animator != null) { animator.SetFloat("X", movementInput.x); animator.SetFloat("Y", movementInput.y); animator.SetFloat("Speed", movementInput.sqrMagnitude); } }
-    void UpdateUI() { if (healthText != null) healthText.text = currentHealth.ToString("F0"); if (feedText != null) feedText.text = currentFeed.ToString("F0"); if (staminaText != null) staminaText.text = currentStamina.ToString("F0"); }
-    void OnDrawGizmosSelected() { Gizmos.color = Color.yellow; Gizmos.DrawWireSphere(transform.position, interactionRadius); }
+    void FixedUpdate() 
+    { 
+        if (currentHealth > 0) 
+        {
+            rb.MovePosition(rb.position + movementInput * currentSpeed * Time.fixedDeltaTime); 
+        }
+    }
+
+    void TryInteract() 
+    { 
+        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactionRadius, interactionLayer);
+        
+        if (WorldGenerator.instance != null) 
+        { 
+            bool mined = WorldGenerator.instance.TryMineStone(transform.position);
+            if (mined) return; 
+        } 
+    }
+
+    public void EquipItem(ItemData item) 
+    { 
+        if (toolController != null) toolController.Equip(item); 
+    }
+
+    public void ReduceStamina(float amount) 
+    { 
+        currentStamina -= amount; 
+        if (currentStamina < 0) currentStamina = 0; 
+        UpdateUI(); 
+    }
+
+    public void Eat(float amount) 
+    { 
+        currentFeed += amount; 
+        if (currentFeed > maxFeed) currentFeed = maxFeed; 
+        UpdateUI(); 
+    }
+
+    void HandleHunger() 
+    { 
+        if (currentFeed > 0) 
+        {
+            currentFeed -= FeedDrain * Time.deltaTime; 
+        }
+        else 
+        { 
+            currentFeed = 0; 
+            TakeDamage(starvationDamage * Time.deltaTime); 
+        } 
+        
+        UpdateUI(); 
+    }
+
+    public void TakeDamage(float damage) 
+    { 
+        currentHealth -= damage; 
+        
+        UpdateUI(); 
+        
+        if (currentHealth <= 0) 
+        {
+            Die(); 
+        }
+    }
+
+    void HandleMovementAndStamina(bool isSprinting) 
+    { 
+        bool isMoving = movementInput.sqrMagnitude > 0; 
+        bool isStarving = currentFeed <= 0; 
+
+        if (isMoving && isSprinting && currentStamina > 0 && !isStarving) 
+        { 
+            currentSpeed = runSpeed; 
+            currentStamina -= staminaDrain * Time.deltaTime; 
+        } 
+        else 
+        { 
+            currentSpeed = walkSpeed; 
+            
+            if (currentStamina < maxStamina) 
+            {
+                currentStamina += staminaRegen * Time.deltaTime; 
+            }
+        } 
+        
+        if (currentStamina < 0) currentStamina = 0;
+        if (currentStamina > maxStamina) currentStamina = maxStamina;
+    }
+
+    void Die() 
+    { 
+        if (animator != null) animator.SetBool("IsDead", true); 
+        this.enabled = false; 
+        Debug.Log("Гравець помер.");
+    }
+
+    void UpdateAnimation() 
+    { 
+        if (animator != null) 
+        { 
+            animator.SetFloat("X", movementInput.x); 
+            animator.SetFloat("Y", movementInput.y); 
+            animator.SetFloat("Speed", movementInput.sqrMagnitude); 
+        } 
+    }
+
+    void UpdateUI() 
+    { 
+        if (healthText != null) healthText.text = currentHealth.ToString("F0"); 
+        if (feedText != null) feedText.text = currentFeed.ToString("F0"); 
+        if (staminaText != null) staminaText.text = currentStamina.ToString("F0"); 
+    }
+
+    void OnDrawGizmosSelected() 
+    { 
+        Gizmos.color = Color.yellow; 
+        Gizmos.DrawWireSphere(transform.position, interactionRadius); 
+    }
 }

@@ -15,10 +15,10 @@ MonoBehaviour:
   itemName: "\u0428\u043C\u0430\u0442\u043E\u0447\u043E\u043A \u0434\u0438\u043D\u0456"
   icon: {fileID: 223343566, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 1
-  maxStackSize: 10
-  price: 2
-  itemType: 0
-  FeedAmount: 20
+  maxStackSize: 30
+  price: 3
+  itemType: 1
+  FeedAmount: 3
   isEatable: 1
   toolType: 0
   tileToPlace: {fileID: 0}

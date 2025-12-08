@@ -32,7 +32,6 @@ public class InventoryManager : MonoBehaviour
                 slot.ClearSlot();
             }
         }
-        Debug.Log("Інвентар UI оновлено!");
     }
 
     public bool AddItem(ItemData item, int amount)
@@ -72,7 +71,6 @@ public class InventoryManager : MonoBehaviour
 
         if (amount > 0)
         {
-            Debug.Log("Інвентар повний!");
             return false;
         }
         
