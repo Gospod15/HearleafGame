@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public enum ItemType { Resource, Food, Tool }
-public enum ToolType { None, Hoe, Axe, Pickaxe }
+public enum ToolType { None, Hoe, Axe, Pickaxe, Seeds }
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
 public class ItemData : ScriptableObject

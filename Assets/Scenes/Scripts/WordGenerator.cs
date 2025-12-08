@@ -248,12 +248,6 @@ public class WorldGenerator : MonoBehaviour
 
                 if (currentTile != null && DetailsTileOnGrass.Contains(currentTile))
                 {
-                    if (stoneItem == null) 
-                    {
-                        Debug.LogError("Забули призначити StoneItem в інспекторі!");
-                        return false;
-                    }
-
                     bool added = InventoryManager.instance.AddItem(stoneItem,1);
                     
                     if (added)

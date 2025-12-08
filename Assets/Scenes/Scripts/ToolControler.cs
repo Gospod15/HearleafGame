@@ -88,5 +88,24 @@ public class ToolController : MonoBehaviour
                 }
             }
         }
+
+        else if (currentTool.toolType == ToolType.Seeds && currentTool.itemName == "Насіння пшениці")
+        {
+
+            if (WorldGenerator.instance != null) {
+                PlantPlantsScript plantScript = WorldGenerator.instance.GetComponent<PlantPlantsScript>();
+                
+                if (plantScript != null)
+                {
+                    bool success = plantScript.PlantWheat(mousePos);
+                    
+                    if (success)
+                    {
+                        InventoryManager.instance.RemoveItem(currentTool, 1); 
+                        Debug.Log("Насіння посаджено!");
+                    }
+                }
+            }
+        }
     }
 }

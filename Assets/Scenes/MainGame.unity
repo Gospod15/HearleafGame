@@ -12939,6 +12939,7 @@ GameObject:
   - component: {fileID: 1586721032}
   - component: {fileID: 1586721031}
   - component: {fileID: 1586721033}
+  - component: {fileID: 1586721034}
   m_Layer: 0
   m_Name: Tilemap
   m_TagString: Untagged
@@ -13132,6 +13133,29 @@ MonoBehaviour:
   sandThreshold: 0.25
   mountainLevel: 0.85
   forestThreshold: 0.6
+--- !u!114 &1586721034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1586721028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8c242292f4225e43b3e66b64c9b5028, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlantPlantsScript
+  tilemap: {fileID: 1586721032}
+  LevelOfGrowthWheat:
+  - {fileID: 11400000, guid: 96fcb488d1b5d824d9b028829a75377f, type: 2}
+  - {fileID: 11400000, guid: 42a666b3ff8611044bdbb2ff72a4cd21, type: 2}
+  - {fileID: 11400000, guid: 5b9e0355a2f7cba4bb4f5034626cdc44, type: 2}
+  - {fileID: 11400000, guid: 7090d2562ad215b4aa0a64f2d63a95a9, type: 2}
+  wheatItemProduct: {fileID: 11400000, guid: 60b00c9e476c5b84e84921fb44d8304a, type: 2}
+  wheatItemSeeds: {fileID: 11400000, guid: 6b26b137bf1072a45857333a958a3db6, type: 2}
+  LevelOfGrowthWatermelon: []
+  TargetDirt: {fileID: 11400000, guid: e1785ae2974cb32428aa121a13d9b713, type: 2}
+  timeofwheatgrowth: 20
 --- !u!1 &1594500268
 GameObject:
   m_ObjectHideFlags: 0

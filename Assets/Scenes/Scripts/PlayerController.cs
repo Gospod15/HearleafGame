@@ -119,7 +119,6 @@ public class PlayerController : MonoBehaviour
     void TryInteract() 
     { 
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, interactionRadius, interactionLayer);
-        
         foreach (var hit in hits)
         {
             ItemInWorldManager itemInWorld = hit.GetComponent<ItemInWorldManager>();
@@ -136,6 +135,17 @@ public class PlayerController : MonoBehaviour
             bool mined = WorldGenerator.instance.TryMineStone(transform.position);
             if (mined) return; 
         } 
+
+        if (WorldGenerator.instance != null)
+        {
+            PlantPlantsScript plantScript = WorldGenerator.instance.GetComponent<PlantPlantsScript>();
+            
+            if (plantScript != null)
+            {
+                bool harvested = plantScript.TryHarvestPlant(transform.position);
+                if (harvested) return;
+            }
+        }
     }
 
     public void EquipItem(ItemData item) 
