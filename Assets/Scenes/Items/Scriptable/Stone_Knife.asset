@@ -16,11 +16,14 @@ MonoBehaviour:
   icon: {fileID: -6099050445329199328, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 0
   maxStackSize: 1
-  price: 0
+  CanBuy: 1
+  BuyPrice: 0
+  CanSell: 1
+  Sellprice: 0
   itemType: 2
   FeedAmount: 0
   isEatable: 0
   toolType: 3
   tileToPlace: {fileID: 0}
   tileToRemove: {fileID: 0}
-  dropPrefab: {fileID: 0}
+  dropPrefab: {fileID: 7880113943053705827, guid: a1c36d7872004824d88a7fd79bd00f94, type: 3}

@@ -60,7 +60,7 @@ public class ContextMenuController : MonoBehaviour
 
         if (currentItem.dropPrefab != null)
         {
-            Vector3 dropPos = player.position + new Vector3(Random.Range(-0.2f, 0.2f), Random.Range(-0.2f, 0.2f), 0);
+            Vector3 dropPos = player.position + new Vector3(Random.Range(-0.5f, 0.5f), Random.Range(-0.5f, 0.5f), 0);
             Instantiate(currentItem.dropPrefab, dropPos, Quaternion.identity);
         }
 

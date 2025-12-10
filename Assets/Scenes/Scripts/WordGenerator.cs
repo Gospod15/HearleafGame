@@ -5,7 +5,6 @@ using System.Linq;
 
 public class WorldGenerator : MonoBehaviour
 {
-
     public static WorldGenerator instance;
 
     [Header("Mining Settings")]
@@ -53,9 +52,9 @@ public class WorldGenerator : MonoBehaviour
 
     void Start()
     {
-        if (randomSeed) seed = Random.Range(-10000, 10000);
         if (treeParent == null) treeParent = new GameObject("Trees_Container").transform;
         if (mainCamera == null) mainCamera = Camera.main;
+
 
         UpdateChunks();
     }
@@ -260,8 +259,8 @@ public class WorldGenerator : MonoBehaviour
                     }
                     else
                     {
-                         Debug.Log("Інвентар повний!");
-                         return false;
+                        Debug.Log("Інвентар повний!");
+                        return false;
                     }
                 }
             }

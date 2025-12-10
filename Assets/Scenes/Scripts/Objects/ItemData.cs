@@ -7,11 +7,16 @@ public enum ToolType { None, Hoe, Axe, Pickaxe, Seeds }
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
 public class ItemData : ScriptableObject
 {
+    [Header("Властивості")]
     public string itemName;
     public Sprite icon;
     public bool isStackable;
     public int maxStackSize = 30;
-    public int price;
+    [Header("Магазин")]
+    public bool CanBuy;
+    public int BuyPrice;
+    public bool CanSell;
+    public int Sellprice;
 
     [Header("Тип")]
     public ItemType itemType;

@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using UnityEngine.EventSystems; 
+using UnityEngine.EventSystems;
 
 public class InventorySlot : MonoBehaviour, IPointerClickHandler
 {
@@ -11,19 +11,22 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     public ItemData item;
     public int amount;
     
-    public bool isShopSlot = false; 
+    public bool isShopSlot = false;
+    
+    public int slotIndex = -1; 
 
-    private float lastClickTime; 
-    private const float DOUBLE_CLICK_SPEED = 0.3f; 
+    private float lastClickTime;
+    private const float DOUBLE_CLICK_SPEED = 0.3f;
 
     public void AddItem(ItemData newItem, int count)
     {
         item = newItem;
         amount = count;
+
         iconComponent.sprite = item.icon;
         iconComponent.enabled = true;
 
-        if (isShopSlot || (item.isStackable && amount > 1))
+        if (amount > 1 || (item.isStackable && !isShopSlot))
         {
             amountText.text = amount.ToString();
             amountText.enabled = true;
@@ -38,6 +41,7 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     {
         item = null;
         amount = 0;
+        slotIndex = -1;
         iconComponent.sprite = null;
         iconComponent.enabled = false;
         if (amountText != null) amountText.enabled = false;
@@ -52,33 +56,23 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
 
             if (isShopSlot)
             {
-                if (ShopManager.instance != null && item != null)
+                // Якщо це магазин - смикаємо ShopManager
+                if (ShopManager.instance != null && slotIndex != -1)
                 {
                     if (isDoubleClick)
-                    {
-                        ShopManager.instance.TryBuyItem(this);
-                    }
+                        ShopManager.instance.TryBuyItem(slotIndex);
                     else
-                    {
-                        ShopManager.instance.SelectShopItem(item);
-                    }
+                        ShopManager.instance.SelectShopItem(slotIndex);
                 }
             }
             else 
             {
-                if (isDoubleClick)
+                // Якщо це інвентар
+                if (isDoubleClick) TryUseItem();
+                else if (ContextMenuController.instance != null)
                 {
-                    TryUseItem(); 
-                }
-                else
-                {
-                    if (ContextMenuController.instance != null)
-                    {
-                        if (item != null)
-                            ContextMenuController.instance.OpenMenu(item, this);
-                        else
-                            ContextMenuController.instance.ClearSelection();
-                    }
+                    if (item != null) ContextMenuController.instance.OpenMenu(item, this);
+                    else ContextMenuController.instance.ClearSelection();
                 }
             }
 
@@ -89,30 +83,23 @@ public class InventorySlot : MonoBehaviour, IPointerClickHandler
     private void TryUseItem()
     {
         if (item == null) return;
-
         PlayerController player = FindObjectOfType<PlayerController>();
         if (player == null) return;
 
-        if (item.itemType == ItemType.Food)
+        if (item.itemType == ItemType.Food && item.isEatable)
         {
-            if (item.isEatable)
-            {
-                player.Eat(item.FeedAmount);
-                Debug.Log($"З'їв {item.itemName}");
-                
-                amount--;
-                if (amount <= 0) {
-                    ClearSlot();
-                    if (ContextMenuController.instance != null) ContextMenuController.instance.ClearSelection();
-                } else {
-                    AddItem(item, amount);
-                }
+            player.Eat(item.FeedAmount);
+            amount--;
+            if (amount <= 0) {
+                ClearSlot();
+                if (ContextMenuController.instance != null) ContextMenuController.instance.ClearSelection();
+            } else {
+                AddItem(item, amount);
             }
         }
         else if (item.itemType == ItemType.Tool)
         {
             player.EquipItem(item);
-            
         }
     }
 }

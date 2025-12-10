@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI feedText; 
     public TextMeshProUGUI staminaText;
     public Image UIInventory; 
+    public Image UIInventoryArmory; 
 
     [Header("Збирання (Руками на E)")]
     public float interactionRadius = 2.0f; 
@@ -41,7 +42,7 @@ public class PlayerController : MonoBehaviour
     public float walkSpeed = 4f;
     private float currentSpeed;
 
-    void Start()
+void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -52,34 +53,19 @@ public class PlayerController : MonoBehaviour
         currentStamina = maxStamina;
         currentSpeed = walkSpeed;
 
-        if (GameManager.instance != null && GameManager.instance.currentLoadedData != null)
+        if (UIInventory != null) 
         {
-            SaveData data = GameManager.instance.currentLoadedData;
-
-            if (data.playerPosition.Length == 3)
-            {
-                if (data.playerPosition[0] != 0 || data.playerPosition[1] != 0)
-                {
-                    Vector3 loadedPos = new Vector3(data.playerPosition[0], data.playerPosition[1], data.playerPosition[2]);
-                    transform.position = loadedPos;
-                }
-            }
-
-            if (data.currentHealth > 1f) currentHealth = data.currentHealth;
-            if (data.currentFeed > 1f) currentFeed = data.currentFeed;
-            currentStamina = data.currentStamina;
+            UIInventory.gameObject.SetActive(false);
         }
-
-        if (UIInventory != null) UIInventory.gameObject.SetActive(false);
+        
         UpdateUI();
     }
 
     void Update()
     {
-        if (currentHealth <= 0) return;
+        if (currentHealth <= 0) {Debug.Log("Ви померли"); return;}
 
         var keyboard = Keyboard.current;
-        if (keyboard == null) return;
 
         movementInput = Vector2.zero;
         if (keyboard.wKey.isPressed) movementInput.y += 1;
@@ -233,11 +219,5 @@ public class PlayerController : MonoBehaviour
         if (healthText != null) healthText.text = currentHealth.ToString("F0"); 
         if (feedText != null) feedText.text = currentFeed.ToString("F0"); 
         if (staminaText != null) staminaText.text = currentStamina.ToString("F0"); 
-    }
-
-    void OnDrawGizmosSelected() 
-    { 
-        Gizmos.color = Color.yellow; 
-        Gizmos.DrawWireSphere(transform.position, interactionRadius); 
     }
 }

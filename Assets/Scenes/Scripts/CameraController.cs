@@ -51,7 +51,6 @@ public class CameraController : MonoBehaviour
             SpriteRenderer sr = hit.GetComponent<SpriteRenderer>();
             if (sr != null)
             {
-
                 if (target.position.y > hit.transform.position.y) 
                 {
                     Color color = sr.color;

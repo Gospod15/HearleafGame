@@ -52,13 +52,6 @@ public class PauseMenuController : MonoBehaviour
         isPaused = false;
     }
 
-    public void OnSaveButtonClicked()
-    {
-        if (GameManager.instance != null)
-        {
-            GameManager.instance.SaveGame();
-        }
-    }
 
     public void OnExitButtonClicked()
     {

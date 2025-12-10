@@ -16,7 +16,10 @@ MonoBehaviour:
   icon: {fileID: 1320614293, guid: dd471f1d552c3194ca37bfee6a219854, type: 3}
   isStackable: 1
   maxStackSize: 30
-  price: 1
+  CanBuy: 1
+  BuyPrice: 10
+  CanSell: 1
+  Sellprice: 0
   itemType: 0
   FeedAmount: 0
   isEatable: 0

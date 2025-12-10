@@ -102,7 +102,6 @@ public class ToolController : MonoBehaviour
                     if (success)
                     {
                         InventoryManager.instance.RemoveItem(currentTool, 1); 
-                        Debug.Log("Насіння посаджено!");
                     }
                 }
             }
